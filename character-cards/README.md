@@ -10,7 +10,7 @@ In order to generate cards you need to build the web-renderer package. The sourc
 
 ```
 $ cd ../web-renderer-java
-$ mvn clean package
+$ mvn package
 $ cd -
 ```
 
