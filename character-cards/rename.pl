@@ -14,7 +14,7 @@ my $count = 0;
 while(my $word = <>) {
     chomp $word;
     my $decoded_word = decode($charset, $word);
-    system("cp ${input}/${prefix}${count}.png ${output}/${prefix}${decoded_word}.png");
+    system("cp \"${input}/${prefix}${count}.png\" \"${output}/${prefix}${decoded_word}.png\"");
     ++$count;
 }
 
