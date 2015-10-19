@@ -1,4 +1,5 @@
 language: java
 script:
-  - cd web-renderer-java && mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-  - cd web-renderer-java && mvn test -B
+  - cd web-renderer-java
+  - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+  - mvn test -B

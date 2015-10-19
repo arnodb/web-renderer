@@ -1,5 +1,7 @@
 # web-renderer
 
+[![Build Status](https://travis-ci.org/arnodb/web-renderer.svg?branch=master)](https://travis-ci.org/arnodb/web-renderer)
+
 A fairly simple tool that uses the web browser (tested with Firefox) rendering power to create
 complex and potentially big pictures. It is implemented in java and uses the
 [Selenium](http://www.seleniumhq.org/) web driver to load any URL and convert the page to a PNG
