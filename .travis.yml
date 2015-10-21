@@ -3,3 +3,4 @@ script:
   - cd web-renderer-java
   - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
   - mvn test -B
+  - mvn clean cobertura:cobertura coveralls:report -B
