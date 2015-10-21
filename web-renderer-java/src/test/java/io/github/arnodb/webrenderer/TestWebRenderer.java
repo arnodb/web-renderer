@@ -2,17 +2,20 @@ package io.github.arnodb.webrenderer;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
+import java.io.PrintStream;
 
 import javax.imageio.ImageIO;
 
 import org.apache.commons.codec.binary.Base64;
 import org.junit.Test;
+import org.kohsuke.args4j.CmdLineException;
 import org.openqa.selenium.WebDriver;
 
 public class TestWebRenderer {
@@ -59,6 +62,51 @@ public class TestWebRenderer {
 
         BufferedImage image = ImageIO.read(output);
         assertBlueBox(image);
+    }
+
+    @Test
+    public void testCommandLineStdOut() throws Exception {
+        File output = new File("target/test-resources/testCommandLine.png");
+        if (output.exists())
+            output.delete();
+        File parent = output.getParentFile();
+        if (!parent.exists())
+            parent.mkdirs();
+
+        String url = "data:text/html;base64," + new String(Base64.encodeBase64(loadHtml().getBytes("UTF-8")));
+        PrintStream oldOut = System.out;
+        ByteArrayOutputStream capture = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(capture));
+        try {
+            WebRenderer.main(new String[]{ "-o", "-", url });
+        } finally {
+            System.out.flush();
+            System.setOut(oldOut);
+        }
+
+        InputStream bais = new ByteArrayInputStream(capture.toByteArray());
+        BufferedImage image = ImageIO.read(bais);
+        assertBlueBox(image);
+    }
+
+    @Test
+    public void testCommandLineUsage() throws Exception {
+        PrintStream oldErr = System.err;
+        ByteArrayOutputStream capture = new ByteArrayOutputStream();
+        System.setErr(new PrintStream(capture));
+        try {
+            WebRenderer.main(new String[]{ });
+            fail("CmdLineException exception expected");
+        } catch (CmdLineException e) {
+        } finally {
+            System.err.flush();
+            System.setErr(oldErr);
+        }
+        assertEquals("usage", "Argument \"URL\" is required\n" +
+                " URL            : url\n" +
+                " -driver DRIVER : driver class name (default: org.openqa.selenium.firefox.Firefo\n" +
+                "                  xDriver)\n" +
+                " -o OUTPUT      : output file\n\n", new String(capture.toByteArray()));
     }
 
     @Test
